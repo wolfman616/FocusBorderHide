@@ -29,9 +29,15 @@ menu,tray,noicon
 gosub,unhook
 ExitApp,
 
-~LButton::FocusLineHide()
+~LButton::
+~Right::
+~Left::
+~Down::
+~Up::
+(instr(ContTitlGetActive(),"syslistview32")|| instr(ContTitlGetActive(),"msctls_trackbar32")? FocusLineHide())
+return,
 
-ContHWGetActive() {
+ContTitlGetActive() {
 	local  Acyt
 	static Active:= "A"
 	ControlGetFocus,Acyt,% Active
@@ -41,7 +47,7 @@ ContHWGetActive() {
 CtrlGetActiveHwnd() {
 	local  AcCont
 	static Active:= "A"
-	ControlGet,AcCont,hwnd,,% ContHWGetActive(),A
+	ControlGet,AcCont,hwnd,,% ContTitlGetActive(),A
 	return,byref AcCont
 }
 
@@ -55,9 +61,9 @@ FocusLineHide(Active=True,chwnd="") {
 
 onMsgbox(HookCr="",eventCR="",hWnd="",idObject="",idChild="",dwEventThread="") {
 	winget,pid,pid,ahk_id %hwnd% 
-	if(pid!=r_pid)
-		return,	;if its our mbox change icon
-	Activ8(wparam="",lparam="",msg="",hwnd)
+	if(pid!=r_pid) ;if not our mbox -> leave.
+		return,	
+	Activ8(wparam="",lparam="",msg="",hwnd) ;its our mbox -> change icon.
 }
 
 Hookinit:
@@ -69,21 +75,21 @@ unHook:
 if(FileExist(TEMP_FILE))
 	FileDelete,%TEMP_FILE%
 else,sleep,300
-dllcall("UnhookWinEvent","Ptr",ProcMb_)
+dllcall("UnhookWinEvent", "Ptr",ProcMb_)
 sleep,20
-dllcall("GlobalFree",    "Ptr",ProcMb_,"Ptr")
+dllcall("GlobalFree",     "Ptr",ProcMb_,"Ptr")
 (%ProcMb_%):= ""
 ,dllcall("UnhookWinEvent","Ptr",HookMb)
 sleep,20
-dllcall("GlobalFree",    "Ptr",HookMb,"Ptr")
+dllcall("GlobalFree",     "Ptr",HookMb,"Ptr")
 ,(%HookMb%):= ""
 return,
 
-Activ8(wparam="",lparam="",msg="",hwnd="") { ;WM_ACTIVATE; when triggered at creation will change the icon in the taskbar and titlebar of mbox.
+Activ8(wparam="",lparam="",msg="",hwnd="") { ;WM_ACTIVATE; when triggered (at creation also) will change the icon in the taskbar and titlebar of mbox.
 	local static Smicon:= B64_2_hicon(Smicon64)
 	, Lgicon:= B64_2_hicon(Lgicon64)
 	, Small:=0, Large:=1, M:= 0x80
-	SendMessage,M,Small,smicon,,ahk_id %hWnd% ;WM_SETICON,ICON_Smallbb
+	SendMessage,M,Small,Smicon,,ahk_id %hWnd% ;WM_SETICON,ICON_Smallbb
 	SendMessage,M,Large,Lgicon,,ahk_id %hWnd% ;WM_SETICON,ICON_Large
 	Return,ErrorLevel
 }
