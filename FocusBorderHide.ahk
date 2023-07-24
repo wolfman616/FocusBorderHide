@@ -1,4 +1,14 @@
 ﻿#NoEnv ; (MW:2023)  Demo to remove the focus border (usually a dotted white line in common controls) (MW:2023)
+
+;;implementation I use
+;
+;loop,parse,% "LButton,Right,Left,Down,Up,",`,
+;	hotkey,~%A_Loopfield%,FocusBorderKill,On
+;
+;FocusBorderKill:
+;(instr(ContTitlGetActive(),"syslistview32")|| instr(ContTitlGetActive(),"msctls_trackbar32")? FocusLineHide())
+;return,
+
 #NoTrayicon
 SetBatchLines,-1
 #Persistent
@@ -24,11 +34,6 @@ OnMessage(0x6,"Activ8")
 OnMessage(0x404,"AHK_NOTIFYICON")
 return,
 
-onExit:
-menu,tray,noicon
-gosub,unhook
-ExitApp,
-
 ~LButton::
 ~Right::
 ~Left::
@@ -36,6 +41,11 @@ ExitApp,
 ~Up::
 (instr(ContTitlGetActive(),"syslistview32")|| instr(ContTitlGetActive(),"msctls_trackbar32")? FocusLineHide())
 return,
+
+onExit:
+menu,tray,noicon
+gosub,unhook
+ExitApp,
 
 ContTitlGetActive() {
 	local  Acyt
