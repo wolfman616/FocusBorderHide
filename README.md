@@ -1,5 +1,9 @@
 # FocusBorderHide
+
 Remove a focus border (usually a white dotted line in common controls)
+
+![image](https://github.com/wolfman616/FocusBorderHide/assets/62726599/fd4b78d9-0fb8-44bd-8865-1d34c6f4b37b)
+
 
 simple utility script to remove active focus border if present. Please note, they can come back as soon as created again by the control.
 
