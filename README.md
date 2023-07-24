@@ -17,4 +17,5 @@ Eg:
 ~Down::
 ~Up::
 (instr(ContTitlGetActive(),"syslistview32")|| instr(ContTitlGetActive(),"msctls_trackbar32")? FocusLineHide())
+
 return,
