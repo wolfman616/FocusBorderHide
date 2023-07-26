@@ -74,11 +74,15 @@ onSel(HookCr="",eventCR="",hWnd="",idObject="",idChild="",dwEventThread="") {
 }
 
 Hookinit:
-HookMb:= dllcall("SetWinEventHook","Uint",0x0010,"Uint",0x0010,"Ptr",0,"Ptr" ; 0x0010 - msgbox
-, ProcMb_:= RegisterCallback("onMsgbox",""),"Uint",0,"Uint",0,"Uint",0x0000) ;WINEVENT_OUTOFCONTEXT-0x0000;
+
 HookSc:= dllcall("SetWinEventHook","Uint",0x8006,"Uint",0x8006,"Ptr",0,"Ptr"
-, ProcSc_:= RegisterCallback("onSel",""),"Uint",0,"Uint",0,"Uint",0x0000) ;0x8006 - selection changed
+, ProcSc_:= RegisterCallback("onSel",""),"Uint",0,"Uint",0,"Uint",0x0000) ;0x8006 - Selection Changed.
+
+HookMb:= dllcall("SetWinEventHook","Uint",0x0010,"Uint",0x0010,"Ptr",0,"Ptr" ; 0x0010 - msgbox- (Changes default icon indirectly on #32770s on demand)
+, ProcMb_:= RegisterCallback("onMsgbox",""),"Uint",0,"Uint",0,"Uint",0x0000) ;WINEVENT_OUTOFCONTEXT-0x0000;
+
 global hOOkz:= "HookMb,ProcMb_,HookSc,ProcSc_"
+
 return,
 
 unHook:
